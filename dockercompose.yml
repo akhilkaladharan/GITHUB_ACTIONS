@@ -1,0 +1,11 @@
+version: "3.8"
+ 
+services:
+  html-template:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: html-template-app
+    ports:
+      - "8080:80"       # Visit http://localhost:8080 in your browser
+    restart: unless-stopped
