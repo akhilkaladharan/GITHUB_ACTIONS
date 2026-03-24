@@ -73,6 +73,7 @@ jobs:
       - name: Deploy via SSH to server
         uses: appleboy/ssh-action@v1.0.3
         with:
+          host: ${{ secrets.SSH_HOST }} 
           host: ${{ secrets.SERVER_HOST }}        # Your server IP or domain
           username: ${{ secrets.SERVER_USER }}    # SSH username (e.g. ubuntu, root)
           key: ${{ secrets.SERVER_SSH_KEY }}      # Private SSH key stored in GitHub Secrets
