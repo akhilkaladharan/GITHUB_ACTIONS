@@ -70,32 +70,17 @@ jobs:
       packages: read
  
     steps:
-      - name: Deploy via SSH to server
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SSH_HOST }} 
-          host: ${{ secrets.SERVER_HOST }}        # Your server IP or domain
-          username: ${{ secrets.SERVER_USER }}    # SSH username (e.g. ubuntu, root)
-          key: ${{ secrets.SERVER_SSH_KEY }}      # Private SSH key stored in GitHub Secrets
-          script: |
-            # Log in to GHCR on the server
-            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io \
-              -u ${{ github.actor }} --password-stdin
- 
-            # Pull the latest image
-            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
- 
-            # Stop & remove old container if running
-            docker stop ${{ env.CONTAINER_NAME }} || true
-            docker rm   ${{ env.CONTAINER_NAME }} || true
- 
-            # Run the new container
-            # Port 80 on the server → port 80 in the container
-            docker run -d \
-              --name ${{ env.CONTAINER_NAME }} \
-              --restart unless-stopped \
-              -p 80:80 \
-              ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+       - name: Deploy via SSH to server
+       uses: appleboy/ssh-action@v1.0.3
+       with:
+        host: ${{ secrets.SSH_HOST }}        # ← This is missing!
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT }}        # optional, defaults to 22
+        script: |
+         docker pull your-image
+         docker stop your-container || true
+         docker run -d --name your-container your-image
  
             echo "✅ Container deployed successfully!"
  
